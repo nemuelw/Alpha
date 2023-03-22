@@ -20,7 +20,7 @@ FUD Linux Malware Dropper \
 
 ## Usage
 
-- Ensure you have AlphaC2 set up already
+- Ensure you have [AlphaC2](https://github.com/nemzyxt/AlphaC2) set up already
 - Start the server by running the AlphaC2 script :
   
   ```
