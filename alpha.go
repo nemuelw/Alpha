@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	HOME = "http://127.0.0.1:5000/update"
+	HOME = "http://127.0.0.1:5000/update" // replace with your C2 address
 )
 
 var (
