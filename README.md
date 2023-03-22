@@ -1,6 +1,7 @@
 # Alpha
 
-FUD Linux Malware Dropper
+FUD Linux Malware Dropper \
+![img](https://github.com/nemzyxt/Alpha/blob/main/scrshot/fud.png?raw=true)
 
 ## Set-up
 
