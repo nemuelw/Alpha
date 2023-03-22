@@ -1,6 +1,6 @@
 /*
  * Author : Nemuel Wainaina
- * Alpha : FUD Linux malware Dropper
+ * Alpha : FUD Linux Malware Dropper
 */
 
 package main
